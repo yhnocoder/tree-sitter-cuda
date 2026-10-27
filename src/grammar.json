@@ -3281,24 +3281,6 @@
           "name": "macro_modifier"
         },
         {
-          "type": "ALIAS",
-          "content": {
-            "type": "SYMBOL",
-            "name": "preproc_if_in_declaration_modifiers"
-          },
-          "named": true,
-          "value": "preproc_if"
-        },
-        {
-          "type": "ALIAS",
-          "content": {
-            "type": "SYMBOL",
-            "name": "preproc_ifdef_in_declaration_modifiers"
-          },
-          "named": true,
-          "value": "preproc_ifdef"
-        },
-        {
           "type": "STRING",
           "value": "__host__"
         },
@@ -3404,8 +3386,31 @@
           {
             "type": "REPEAT",
             "content": {
-              "type": "SYMBOL",
-              "name": "_declaration_modifiers"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "_declaration_modifiers"
+                },
+                {
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "preproc_if_in_declaration_modifiers"
+                  },
+                  "named": true,
+                  "value": "preproc_if"
+                },
+                {
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "preproc_ifdef_in_declaration_modifiers"
+                  },
+                  "named": true,
+                  "value": "preproc_ifdef"
+                }
+              ]
             }
           }
         ]
@@ -19145,10 +19150,6 @@
     [
       "splice_type_specifier",
       "splice_expression"
-    ],
-    [
-      "_declaration_modifiers",
-      "_launch_config"
     ],
     [
       "_block_item",

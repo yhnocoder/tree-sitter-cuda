@@ -66,8 +66,6 @@ jobs:
             examples/cuda-samples/Samples/2_Concepts_and_Techniques/MC_EstimatePiP/src/piestimator.cu
             examples/cuda-samples/Samples/2_Concepts_and_Techniques/MC_EstimatePiQ/src/piestimator.cu
             examples/cuda-samples/Samples/2_Concepts_and_Techniques/MC_SingleAsianOptionP/src/pricingengine.cu
-            examples/cuda-samples/Samples/2_Concepts_and_Techniques/dct8x8/dct8x8_kernel_short.cuh
-            examples/cuda-samples/Samples/3_CUDA_Features/newdelete/newdelete.cu
             examples/cuda-samples/Samples/3_CUDA_Features/simpleCudaGraphs/simpleCudaGraphs.cu
             examples/cuda-samples/Samples/4_CUDA_Libraries/conjugateGradientMultiDeviceCG/conjugateGradientMultiDeviceCG.cu
             examples/cuda-samples/Samples/5_Domain_Specific/HSOpticalFlow/flowCUDA.cu
@@ -76,7 +74,6 @@ jobs:
             examples/cuda-samples/Samples/5_Domain_Specific/convolutionFFT2D/convolutionFFT2D.cuh
             examples/cuda-samples/Samples/5_Domain_Specific/postProcessGL/postProcessGL.cu
             examples/cuda-samples/Samples/5_Domain_Specific/vulkanImageCUDA/vulkanImageCUDA.cu
-            examples/cuda-samples/Samples/6_Performance/alignedTypes/alignedTypes.cu
             examples/cuda-samples/Samples/8_Platform_Specific/Tegra/EGLSync_CUDAEvent_Interop/EGLSync_CUDAEvent_Interop.cu
       - name: Upload failures artifact
         uses: actions/upload-artifact@v7

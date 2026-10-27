@@ -464,3 +464,57 @@ void run(cudaStream_t stream) {
               (number_literal))
             (argument_list
               (identifier))))))))
+
+================================================================================
+An #if right after a case label is not a declaration modifier
+================================================================================
+
+void keyboard(unsigned char key) {
+  switch (key) {
+  case (27):
+#if defined(__APPLE__)
+    exit(0);
+#else
+    glutDestroyWindow(glutGetWindow());
+    return;
+#endif
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator
+      (identifier)
+      (parameter_list
+        (parameter_declaration
+          (sized_type_specifier
+            (primitive_type))
+          (identifier))))
+    (compound_statement
+      (switch_statement
+        (condition_clause
+          (identifier))
+        (compound_statement
+          (case_statement
+            (parenthesized_expression
+              (number_literal)))
+          (preproc_if
+            (preproc_defined
+              (identifier))
+            (expression_statement
+              (call_expression
+                (identifier)
+                (argument_list
+                  (number_literal))))
+            (preproc_else
+              (expression_statement
+                (call_expression
+                  (identifier)
+                  (argument_list
+                    (call_expression
+                      (identifier)
+                      (argument_list)))))
+              (return_statement))))))))

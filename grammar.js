@@ -16,7 +16,6 @@ module.exports = grammar(CPP, {
     name: 'cuda',
 
     conflicts: ($, original) => original.concat([
-        [$._declaration_modifiers, $._launch_config],
         [$._block_item, $.pragma_statement],
     ]),
 
@@ -29,8 +28,6 @@ module.exports = grammar(CPP, {
                 $.cluster_dims,
                 $.maxnreg,
                 $.macro_modifier,
-                alias($.preproc_if_in_declaration_modifiers, $.preproc_if),
-                alias($.preproc_ifdef_in_declaration_modifiers, $.preproc_ifdef),
                 '__host__',
                 prec(10, choice('__device__', '__tile__')),
                 prec(10, choice('__global__', '__tile_global__')),
@@ -39,7 +36,18 @@ module.exports = grammar(CPP, {
                 original
             ),
 
-        // `__global__ void\n#if X\n__launch_bounds__(N)\n#endif\nkernel(...)`
+        // `__global__ void\n#if X\n__launch_bounds__(N)\n#endif\nkernel(...)`: only after the
+        // type, since before it an `#if` can also close a `case` or open a block-level #if.
+        _declaration_specifiers: $ => prec.right(seq(
+            repeat($._declaration_modifiers),
+            field('type', $.type_specifier),
+            repeat(choice(
+                $._declaration_modifiers,
+                alias($.preproc_if_in_declaration_modifiers, $.preproc_if),
+                alias($.preproc_ifdef_in_declaration_modifiers, $.preproc_ifdef),
+            )),
+        )),
+
         // Only launch configuration, and never empty, so that a plain `#if` around whole
         // declarations stays a top-level preproc_if.
         preproc_if_in_declaration_modifiers: $ => seq(
