@@ -1,0 +1,26 @@
+{
+  "name": "@yhnocoder/tree-sitter-cuda",
+  "version": "0.1.0",
+  "description": "tree-sitter-cuda.wasm for web-tree-sitter 0.25 / @vscode/tree-sitter-wasm 0.3 (ABI 15), from the yhnocoder fork of tree-sitter-cuda",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yhnocoder/tree-sitter-cuda.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "tree-sitter",
+    "cuda",
+    "wasm"
+  ],
+  "files": [
+    "tree-sitter-cuda.wasm",
+    "queries/*",
+    "LICENSE",
+    "README.md"
+  ],
+  "exports": {
+    "./tree-sitter-cuda.wasm": "./tree-sitter-cuda.wasm",
+    "./queries/*": "./queries/*",
+    "./package.json": "./package.json"
+  }
+}
