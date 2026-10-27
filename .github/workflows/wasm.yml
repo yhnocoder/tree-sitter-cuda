@@ -3,7 +3,9 @@ name: Wasm
 # Builds tree-sitter-cuda.wasm for CodeBoard, which loads it with the runtime in
 # @vscode/tree-sitter-wasm. The CLI and emsdk versions must match that runtime
 # (0.3.1 ships web-tree-sitter 0.25.1, ABI 15, emsdk 4.0.1); bump all three together.
-# A `v*` tag attaches the wasm to that tag's GitHub Release.
+# Every run packs npm/ (only the wasm and the queries) into a tarball. A `v<npm/package.json version>`
+# tag attaches the wasm and that tarball to the tag's GitHub Release, and CodeBoard installs the
+# tarball by its URL. Nothing is published to the npm registry.
 
 on:
   push:
@@ -15,6 +17,7 @@ on:
       - test/**
       - package.json
       - package-lock.json
+      - npm/**
       - script/check-wasm.mjs
       - .github/workflows/wasm.yml
   pull_request:
@@ -62,10 +65,22 @@ jobs:
       - name: Load with CodeBoard's runtime
         run: node script/check-wasm.mjs tree-sitter-cuda.wasm
       - run: sha256sum tree-sitter-cuda.wasm | tee tree-sitter-cuda.wasm.sha256
+      - name: Pack the wasm package
+        run: |
+          cp tree-sitter-cuda.wasm LICENSE npm/
+          mkdir -p npm/queries && cp queries/*.scm npm/queries/
+          npm pack ./npm
       - uses: actions/upload-artifact@v7
         with:
           name: tree-sitter-cuda-wasm
-          path: tree-sitter-cuda.wasm*
+          path: |
+            tree-sitter-cuda.wasm*
+            yhnocoder-tree-sitter-cuda-*.tgz
+      - name: Check the tag against the package version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          V=$(node -p 'require("./npm/package.json").version')
+          [ "$GITHUB_REF_NAME" = "v$V" ] || { echo "::error::tag $GITHUB_REF_NAME does not match npm/package.json version $V"; exit 1; }
       - name: Attach to the release
         if: startsWith(github.ref, 'refs/tags/v')
         env:
@@ -73,4 +88,4 @@ jobs:
         run: |
           gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \
             || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes "tree-sitter-cuda.wasm built with tree-sitter CLI $TREE_SITTER_CLI (ABI 15) and emsdk $EMSDK, for @vscode/tree-sitter-wasm $VSCODE_TREE_SITTER_WASM."
-          gh release upload "$GITHUB_REF_NAME" tree-sitter-cuda.wasm tree-sitter-cuda.wasm.sha256 --clobber
+          gh release upload "$GITHUB_REF_NAME" tree-sitter-cuda.wasm tree-sitter-cuda.wasm.sha256 yhnocoder-tree-sitter-cuda-*.tgz --clobber

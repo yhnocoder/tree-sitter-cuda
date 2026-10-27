@@ -45,3 +45,8 @@ zig-out/
 *.tar.gz
 *.tgz
 *.zip
+
+# packed into the wasm package by CI
+npm/LICENSE
+npm/queries/
+*.tgz

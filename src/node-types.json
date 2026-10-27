@@ -394,6 +394,10 @@
         "named": true
       },
       {
+        "type": "pragma_statement",
+        "named": true
+      },
+      {
         "type": "return_statement",
         "named": true
       },
@@ -1364,6 +1368,10 @@
           "named": true
         },
         {
+          "type": "pragma_statement",
+          "named": true
+        },
+        {
           "type": "return_statement",
           "named": true
         },
@@ -1532,6 +1540,21 @@
         },
         {
           "type": "virtual_specifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "cluster_dims",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
           "named": true
         }
       ]
@@ -1738,6 +1761,10 @@
         },
         {
           "type": "namespace_definition",
+          "named": true
+        },
+        {
+          "type": "pragma_macro",
           "named": true
         },
         {
@@ -2209,6 +2236,10 @@
           "named": true
         },
         {
+          "type": "cluster_dims",
+          "named": true
+        },
+        {
           "type": "explicit_function_specifier",
           "named": true
         },
@@ -2217,7 +2248,23 @@
           "named": true
         },
         {
+          "type": "macro_modifier",
+          "named": true
+        },
+        {
+          "type": "maxnreg",
+          "named": true
+        },
+        {
           "type": "ms_declspec_modifier",
+          "named": true
+        },
+        {
+          "type": "preproc_if",
+          "named": true
+        },
+        {
+          "type": "preproc_ifdef",
           "named": true
         },
         {
@@ -2277,6 +2324,10 @@
         },
         {
           "type": "namespace_definition",
+          "named": true
+        },
+        {
+          "type": "pragma_macro",
           "named": true
         },
         {
@@ -2667,11 +2718,31 @@
           "named": true
         },
         {
+          "type": "cluster_dims",
+          "named": true
+        },
+        {
           "type": "launch_bounds",
           "named": true
         },
         {
+          "type": "macro_modifier",
+          "named": true
+        },
+        {
+          "type": "maxnreg",
+          "named": true
+        },
+        {
           "type": "ms_declspec_modifier",
+          "named": true
+        },
+        {
+          "type": "preproc_if",
+          "named": true
+        },
+        {
+          "type": "preproc_ifdef",
           "named": true
         },
         {
@@ -2769,6 +2840,10 @@
         },
         {
           "type": "namespace_definition",
+          "named": true
+        },
+        {
+          "type": "pragma_macro",
           "named": true
         },
         {
@@ -2916,11 +2991,31 @@
           "named": true
         },
         {
+          "type": "cluster_dims",
+          "named": true
+        },
+        {
           "type": "launch_bounds",
           "named": true
         },
         {
+          "type": "macro_modifier",
+          "named": true
+        },
+        {
+          "type": "maxnreg",
+          "named": true
+        },
+        {
           "type": "ms_declspec_modifier",
+          "named": true
+        },
+        {
+          "type": "preproc_if",
+          "named": true
+        },
+        {
+          "type": "preproc_ifdef",
           "named": true
         },
         {
@@ -3402,11 +3497,31 @@
           "named": true
         },
         {
+          "type": "cluster_dims",
+          "named": true
+        },
+        {
           "type": "launch_bounds",
           "named": true
         },
         {
+          "type": "macro_modifier",
+          "named": true
+        },
+        {
+          "type": "maxnreg",
+          "named": true
+        },
+        {
           "type": "ms_declspec_modifier",
+          "named": true
+        },
+        {
+          "type": "preproc_if",
+          "named": true
+        },
+        {
+          "type": "preproc_ifdef",
           "named": true
         },
         {
@@ -3657,6 +3772,10 @@
           "named": true
         },
         {
+          "type": "cluster_dims",
+          "named": true
+        },
+        {
           "type": "default_method_clause",
           "named": true
         },
@@ -3677,11 +3796,27 @@
           "named": true
         },
         {
+          "type": "macro_modifier",
+          "named": true
+        },
+        {
+          "type": "maxnreg",
+          "named": true
+        },
+        {
           "type": "ms_call_modifier",
           "named": true
         },
         {
           "type": "ms_declspec_modifier",
+          "named": true
+        },
+        {
+          "type": "preproc_if",
+          "named": true
+        },
+        {
+          "type": "preproc_ifdef",
           "named": true
         },
         {
@@ -4446,6 +4581,26 @@
     }
   },
   {
+    "type": "macro_modifier",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "maxnreg",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "module_declaration",
     "named": true,
     "fields": {
@@ -4831,11 +4986,31 @@
           "named": true
         },
         {
+          "type": "cluster_dims",
+          "named": true
+        },
+        {
           "type": "launch_bounds",
           "named": true
         },
         {
+          "type": "macro_modifier",
+          "named": true
+        },
+        {
+          "type": "maxnreg",
+          "named": true
+        },
+        {
           "type": "ms_declspec_modifier",
+          "named": true
+        },
+        {
+          "type": "preproc_if",
+          "named": true
+        },
+        {
+          "type": "preproc_ifdef",
           "named": true
         },
         {
@@ -4916,11 +5091,31 @@
           "named": true
         },
         {
+          "type": "cluster_dims",
+          "named": true
+        },
+        {
           "type": "launch_bounds",
           "named": true
         },
         {
+          "type": "macro_modifier",
+          "named": true
+        },
+        {
+          "type": "maxnreg",
+          "named": true
+        },
+        {
           "type": "ms_declspec_modifier",
+          "named": true
+        },
+        {
+          "type": "preproc_if",
+          "named": true
+        },
+        {
+          "type": "preproc_ifdef",
           "named": true
         },
         {
@@ -5002,11 +5197,31 @@
           "named": true
         },
         {
+          "type": "cluster_dims",
+          "named": true
+        },
+        {
           "type": "launch_bounds",
           "named": true
         },
         {
+          "type": "macro_modifier",
+          "named": true
+        },
+        {
+          "type": "maxnreg",
+          "named": true
+        },
+        {
           "type": "ms_declspec_modifier",
+          "named": true
+        },
+        {
+          "type": "preproc_if",
+          "named": true
+        },
+        {
+          "type": "preproc_ifdef",
           "named": true
         },
         {
@@ -5266,6 +5481,41 @@
     }
   },
   {
+    "type": "pragma_macro",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "pragma_statement",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "statement",
+            "named": true
+          }
+        ]
+      },
+      "pragma": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "pragma_macro",
+            "named": true
+          },
+          {
+            "type": "preproc_call",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "preproc_call",
     "named": true,
     "fields": {
@@ -5462,6 +5712,10 @@
           "named": true
         },
         {
+          "type": "pragma_macro",
+          "named": true
+        },
+        {
           "type": "preproc_call",
           "named": true
         },
@@ -5622,6 +5876,10 @@
           "named": true
         },
         {
+          "type": "pragma_macro",
+          "named": true
+        },
+        {
           "type": "preproc_call",
           "named": true
         },
@@ -5697,6 +5955,10 @@
           "named": true
         },
         {
+          "type": "cluster_dims",
+          "named": true
+        },
+        {
           "type": "concept_definition",
           "named": true
         },
@@ -5737,7 +5999,15 @@
           "named": true
         },
         {
+          "type": "launch_bounds",
+          "named": true
+        },
+        {
           "type": "linkage_specification",
+          "named": true
+        },
+        {
+          "type": "maxnreg",
           "named": true
         },
         {
@@ -5750,6 +6020,10 @@
         },
         {
           "type": "namespace_definition",
+          "named": true
+        },
+        {
+          "type": "pragma_macro",
           "named": true
         },
         {
@@ -5921,6 +6195,10 @@
           "named": true
         },
         {
+          "type": "cluster_dims",
+          "named": true
+        },
+        {
           "type": "concept_definition",
           "named": true
         },
@@ -5961,7 +6239,15 @@
           "named": true
         },
         {
+          "type": "launch_bounds",
+          "named": true
+        },
+        {
           "type": "linkage_specification",
+          "named": true
+        },
+        {
+          "type": "maxnreg",
           "named": true
         },
         {
@@ -5974,6 +6260,10 @@
         },
         {
           "type": "namespace_definition",
+          "named": true
+        },
+        {
+          "type": "pragma_macro",
           "named": true
         },
         {
@@ -6081,6 +6371,10 @@
           "named": true
         },
         {
+          "type": "cluster_dims",
+          "named": true
+        },
+        {
           "type": "concept_definition",
           "named": true
         },
@@ -6121,7 +6415,15 @@
           "named": true
         },
         {
+          "type": "launch_bounds",
+          "named": true
+        },
+        {
           "type": "linkage_specification",
+          "named": true
+        },
+        {
+          "type": "maxnreg",
           "named": true
         },
         {
@@ -6134,6 +6436,10 @@
         },
         {
           "type": "namespace_definition",
+          "named": true
+        },
+        {
+          "type": "pragma_macro",
           "named": true
         },
         {
@@ -7134,11 +7440,31 @@
           "named": true
         },
         {
+          "type": "cluster_dims",
+          "named": true
+        },
+        {
           "type": "launch_bounds",
           "named": true
         },
         {
+          "type": "macro_modifier",
+          "named": true
+        },
+        {
+          "type": "maxnreg",
+          "named": true
+        },
+        {
           "type": "ms_declspec_modifier",
+          "named": true
+        },
+        {
+          "type": "preproc_if",
+          "named": true
+        },
+        {
+          "type": "preproc_ifdef",
           "named": true
         },
         {
@@ -7948,11 +8274,31 @@
           "named": true
         },
         {
+          "type": "cluster_dims",
+          "named": true
+        },
+        {
           "type": "launch_bounds",
           "named": true
         },
         {
+          "type": "macro_modifier",
+          "named": true
+        },
+        {
+          "type": "maxnreg",
+          "named": true
+        },
+        {
           "type": "ms_declspec_modifier",
+          "named": true
+        },
+        {
+          "type": "preproc_if",
+          "named": true
+        },
+        {
+          "type": "preproc_ifdef",
           "named": true
         },
         {
@@ -8245,6 +8591,106 @@
     "named": false
   },
   {
+    "type": "ALWAYS_INLINE",
+    "named": false
+  },
+  {
+    "type": "C10_ALWAYS_INLINE",
+    "named": false
+  },
+  {
+    "type": "C10_DEVICE",
+    "named": false
+  },
+  {
+    "type": "C10_HOST",
+    "named": false
+  },
+  {
+    "type": "C10_HOST_DEVICE",
+    "named": false
+  },
+  {
+    "type": "C10_UNROLL",
+    "named": false
+  },
+  {
+    "type": "CUTE_ALIGNAS",
+    "named": false
+  },
+  {
+    "type": "CUTE_DEVICE",
+    "named": false
+  },
+  {
+    "type": "CUTE_HOST",
+    "named": false
+  },
+  {
+    "type": "CUTE_HOST_DEVICE",
+    "named": false
+  },
+  {
+    "type": "CUTE_HOST_RTC",
+    "named": false
+  },
+  {
+    "type": "CUTE_NO_UNROLL",
+    "named": false
+  },
+  {
+    "type": "CUTE_UNROLL",
+    "named": false
+  },
+  {
+    "type": "CUTLASS_ALIGNAS",
+    "named": false
+  },
+  {
+    "type": "CUTLASS_DEVICE",
+    "named": false
+  },
+  {
+    "type": "CUTLASS_GLOBAL",
+    "named": false
+  },
+  {
+    "type": "CUTLASS_HOST",
+    "named": false
+  },
+  {
+    "type": "CUTLASS_HOST_DEVICE",
+    "named": false
+  },
+  {
+    "type": "CUTLASS_PRAGMA_NO_UNROLL",
+    "named": false
+  },
+  {
+    "type": "CUTLASS_PRAGMA_UNROLL",
+    "named": false
+  },
+  {
+    "type": "DEVICE_INLINE",
+    "named": false
+  },
+  {
+    "type": "DINLINE",
+    "named": false
+  },
+  {
+    "type": "FORCE_INLINE",
+    "named": false
+  },
+  {
+    "type": "HOST_DEVICE",
+    "named": false
+  },
+  {
+    "type": "HOST_DEVICE_INLINE",
+    "named": false
+  },
+  {
     "type": "L\"",
     "named": false
   },
@@ -8262,6 +8708,18 @@
   },
   {
     "type": "R\"",
+    "named": false
+  },
+  {
+    "type": "SGL_DEVICE",
+    "named": false
+  },
+  {
+    "type": "SGL_DEVICE_HOST",
+    "named": false
+  },
+  {
+    "type": "SGL_HIP_INLINE",
     "named": false
   },
   {
@@ -8337,6 +8795,10 @@
     "named": false
   },
   {
+    "type": "__align__",
+    "named": false
+  },
+  {
     "type": "__alignof",
     "named": false
   },
@@ -8370,6 +8832,10 @@
   },
   {
     "type": "__clrcall",
+    "named": false
+  },
+  {
+    "type": "__cluster_dims__",
     "named": false
   },
   {
@@ -8442,6 +8908,10 @@
   },
   {
     "type": "__managed__",
+    "named": false
+  },
+  {
+    "type": "__maxnreg__",
     "named": false
   },
   {
