@@ -1,0 +1,76 @@
+name: Wasm
+
+# Builds tree-sitter-cuda.wasm for CodeBoard, which loads it with the runtime in
+# @vscode/tree-sitter-wasm. The CLI and emsdk versions must match that runtime
+# (0.3.1 ships web-tree-sitter 0.25.1, ABI 15, emsdk 4.0.1); bump all three together.
+# A `v*` tag attaches the wasm to that tag's GitHub Release.
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+    paths:
+      - grammar.js
+      - src/**
+      - test/**
+      - package.json
+      - package-lock.json
+      - script/check-wasm.mjs
+      - .github/workflows/wasm.yml
+  pull_request:
+  workflow_dispatch:
+
+env:
+  TREE_SITTER_CLI: 0.25.1
+  EMSDK: 4.0.1
+  VSCODE_TREE_SITTER_WASM: 0.3.1
+
+concurrency:
+  group: ${{github.workflow}}-${{github.ref}}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: ${{env.EMSDK}}
+      - name: Install grammar dependencies and the tree-sitter CLI
+        run: |
+          npm ci --ignore-scripts
+          npm i --no-save --ignore-scripts "@vscode/tree-sitter-wasm@$VSCODE_TREE_SITTER_WASM"
+          mkdir -p "$RUNNER_TEMP/bin"
+          curl -fsSL "https://github.com/tree-sitter/tree-sitter/releases/download/v$TREE_SITTER_CLI/tree-sitter-linux-x64.gz" | gunzip > "$RUNNER_TEMP/bin/tree-sitter"
+          chmod +x "$RUNNER_TEMP/bin/tree-sitter"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+      - run: tree-sitter --version
+      # src/ is committed by upstream's newer CLI; regenerate so the parser's ABI and
+      # headers are exactly what this CLI and runtime expect.
+      - name: Generate
+        run: tree-sitter generate
+      - name: Corpus tests
+        run: tree-sitter test
+      - name: Build wasm
+        run: tree-sitter build --wasm -o tree-sitter-cuda.wasm
+      - name: Load with CodeBoard's runtime
+        run: node script/check-wasm.mjs tree-sitter-cuda.wasm
+      - run: sha256sum tree-sitter-cuda.wasm | tee tree-sitter-cuda.wasm.sha256
+      - uses: actions/upload-artifact@v7
+        with:
+          name: tree-sitter-cuda-wasm
+          path: tree-sitter-cuda.wasm*
+      - name: Attach to the release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{github.token}}
+        run: |
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \
+            || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes "tree-sitter-cuda.wasm built with tree-sitter CLI $TREE_SITTER_CLI (ABI 15) and emsdk $EMSDK, for @vscode/tree-sitter-wasm $VSCODE_TREE_SITTER_WASM."
+          gh release upload "$GITHUB_REF_NAME" tree-sitter-cuda.wasm tree-sitter-cuda.wasm.sha256 --clobber
