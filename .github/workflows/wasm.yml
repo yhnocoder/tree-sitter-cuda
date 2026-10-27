@@ -45,17 +45,20 @@ jobs:
       - name: Install grammar dependencies and the tree-sitter CLI
         run: |
           npm ci --ignore-scripts
-          npm i --no-save --ignore-scripts "tree-sitter-cli@$TREE_SITTER_CLI" "@vscode/tree-sitter-wasm@$VSCODE_TREE_SITTER_WASM"
-          node node_modules/tree-sitter-cli/install.js
-          npx tree-sitter --version
+          npm i --no-save --ignore-scripts "@vscode/tree-sitter-wasm@$VSCODE_TREE_SITTER_WASM"
+          mkdir -p "$RUNNER_TEMP/bin"
+          curl -fsSL "https://github.com/tree-sitter/tree-sitter/releases/download/v$TREE_SITTER_CLI/tree-sitter-linux-x64.gz" | gunzip > "$RUNNER_TEMP/bin/tree-sitter"
+          chmod +x "$RUNNER_TEMP/bin/tree-sitter"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+      - run: tree-sitter --version
       # src/ is committed by upstream's newer CLI; regenerate so the parser's ABI and
       # headers are exactly what this CLI and runtime expect.
       - name: Generate
-        run: npx tree-sitter generate
+        run: tree-sitter generate
       - name: Corpus tests
-        run: npx tree-sitter test
+        run: tree-sitter test
       - name: Build wasm
-        run: npx tree-sitter build --wasm -o tree-sitter-cuda.wasm
+        run: tree-sitter build --wasm -o tree-sitter-cuda.wasm
       - name: Load with CodeBoard's runtime
         run: node script/check-wasm.mjs tree-sitter-cuda.wasm
       - run: sha256sum tree-sitter-cuda.wasm | tee tree-sitter-cuda.wasm.sha256
