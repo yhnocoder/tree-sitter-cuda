@@ -15,3 +15,13 @@
 ] @keyword.modifier
 
 "__launch_bounds__" @keyword.modifier
+
+[
+  "__cluster_dims__"
+  "__maxnreg__"
+  "__align__"
+] @keyword.modifier
+
+(macro_modifier) @keyword.modifier
+
+(pragma_macro) @keyword.directive

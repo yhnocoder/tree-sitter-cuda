@@ -1,0 +1,466 @@
+================================================================================
+Launch bounds behind #if between the return type and the kernel name
+================================================================================
+
+template <typename scalar_t, bool need_check>
+static __global__ void
+#if defined(USE_ROCM)
+__launch_bounds__(WARP_SIZE * NWARPS, 2)
+#endif
+    mul_mat_q4_0(const void* __restrict__ vx, scalar_t* __restrict__ dst) {}
+
+__global__ void
+#ifdef USE_ROCM
+__launch_bounds__(256)
+#else
+__launch_bounds__(128, 1)
+#endif
+k() {}
+
+--------------------------------------------------------------------------------
+
+(translation_unit
+  (template_declaration
+    (template_parameter_list
+      (type_parameter_declaration
+        (type_identifier))
+      (parameter_declaration
+        (primitive_type)
+        (identifier)))
+    (function_definition
+      (storage_class_specifier)
+      (primitive_type)
+      (preproc_if
+        (preproc_defined
+          (identifier))
+        (launch_bounds
+          (binary_expression
+            (identifier)
+            (identifier))
+          (number_literal)))
+      (function_declarator
+        (identifier)
+        (parameter_list
+          (parameter_declaration
+            (type_qualifier)
+            (primitive_type)
+            (pointer_declarator
+              (type_qualifier)
+              (identifier)))
+          (parameter_declaration
+            (type_identifier)
+            (pointer_declarator
+              (type_qualifier)
+              (identifier)))))
+      (compound_statement)))
+  (function_definition
+    (primitive_type)
+    (preproc_ifdef
+      (identifier)
+      (launch_bounds
+        (number_literal))
+      (preproc_else
+        (launch_bounds
+          (number_literal)
+          (number_literal))))
+    (function_declarator
+      (identifier)
+      (parameter_list))
+    (compound_statement)))
+
+================================================================================
+Cluster dims, max registers and three launch bounds
+================================================================================
+
+template <uint32_t kClusterSize>
+__global__ __launch_bounds__(kRows / kClusterSize) __cluster_dims__(kClusterSize, 1, 1)
+    void all_reduce_kernel(const __grid_constant__ Params params) {}
+
+__global__ void __launch_bounds__(128, 1, 2) __maxnreg__(64) k() {}
+
+--------------------------------------------------------------------------------
+
+(translation_unit
+  (template_declaration
+    (template_parameter_list
+      (parameter_declaration
+        (primitive_type)
+        (identifier)))
+    (function_definition
+      (launch_bounds
+        (binary_expression
+          (identifier)
+          (identifier)))
+      (cluster_dims
+        (identifier)
+        (number_literal)
+        (number_literal))
+      (primitive_type)
+      (function_declarator
+        (identifier)
+        (parameter_list
+          (parameter_declaration
+            (type_qualifier)
+            (type_qualifier)
+            (type_identifier)
+            (identifier))))
+      (compound_statement)))
+  (function_definition
+    (primitive_type)
+    (launch_bounds
+      (number_literal)
+      (number_literal)
+      (number_literal))
+    (maxnreg
+      (number_literal))
+    (function_declarator
+      (identifier)
+      (parameter_list))
+    (compound_statement)))
+
+================================================================================
+Modifier macros
+================================================================================
+
+SGL_DEVICE float warp_sum(float x) { return x; }
+template <typename T>
+SGL_DEVICE_HOST T div_ceil(T a, T b) { return (a + b - 1) / b; }
+static DINLINE void st_flag(int* flag) {}
+CUTLASS_HOST_DEVICE int size() const;
+__quickreduce_device_inline__ void reduce() {}
+
+struct Layout {
+  SGL_DEVICE int rank() const { return r; }
+};
+
+void f() {
+  CHECK_DEVICE(x);
+  CHECK_HOST(y);
+}
+
+--------------------------------------------------------------------------------
+
+(translation_unit
+  (function_definition
+    (macro_modifier)
+    (primitive_type)
+    (function_declarator
+      (identifier)
+      (parameter_list
+        (parameter_declaration
+          (primitive_type)
+          (identifier))))
+    (compound_statement
+      (return_statement
+        (identifier))))
+  (template_declaration
+    (template_parameter_list
+      (type_parameter_declaration
+        (type_identifier)))
+    (function_definition
+      (macro_modifier)
+      (type_identifier)
+      (function_declarator
+        (identifier)
+        (parameter_list
+          (parameter_declaration
+            (type_identifier)
+            (identifier))
+          (parameter_declaration
+            (type_identifier)
+            (identifier))))
+      (compound_statement
+        (return_statement
+          (binary_expression
+            (parenthesized_expression
+              (binary_expression
+                (binary_expression
+                  (identifier)
+                  (identifier))
+                (number_literal)))
+            (identifier))))))
+  (function_definition
+    (storage_class_specifier)
+    (macro_modifier)
+    (primitive_type)
+    (function_declarator
+      (identifier)
+      (parameter_list
+        (parameter_declaration
+          (primitive_type)
+          (pointer_declarator
+            (identifier)))))
+    (compound_statement))
+  (declaration
+    (macro_modifier)
+    (primitive_type)
+    (function_declarator
+      (identifier)
+      (parameter_list)
+      (type_qualifier)))
+  (function_definition
+    (macro_modifier)
+    (primitive_type)
+    (function_declarator
+      (identifier)
+      (parameter_list))
+    (compound_statement))
+  (struct_specifier
+    (type_identifier)
+    (field_declaration_list
+      (function_definition
+        (macro_modifier)
+        (primitive_type)
+        (function_declarator
+          (field_identifier)
+          (parameter_list)
+          (type_qualifier))
+        (compound_statement
+          (return_statement
+            (identifier))))))
+  (function_definition
+    (primitive_type)
+    (function_declarator
+      (identifier)
+      (parameter_list))
+    (compound_statement
+      (expression_statement
+        (call_expression
+          (identifier)
+          (argument_list
+            (identifier))))
+      (expression_statement
+        (call_expression
+          (identifier)
+          (argument_list
+            (identifier)))))))
+
+================================================================================
+Modifiers on their own line before a constructor
+================================================================================
+
+struct TokenLayout {
+  int n;
+
+  __forceinline__ __device__ __host__
+  TokenLayout(int n) : n(n) {}
+
+  __forceinline__ __device__ int get() const { return n; }
+};
+
+--------------------------------------------------------------------------------
+
+(translation_unit
+  (struct_specifier
+    (type_identifier)
+    (field_declaration_list
+      (field_declaration
+        (primitive_type)
+        (field_identifier))
+      (function_definition
+        (function_declarator
+          (identifier)
+          (parameter_list
+            (parameter_declaration
+              (primitive_type)
+              (identifier))))
+        (field_initializer_list
+          (field_initializer
+            (field_identifier)
+            (argument_list
+              (identifier))))
+        (compound_statement))
+      (function_definition
+        (primitive_type)
+        (function_declarator
+          (field_identifier)
+          (parameter_list)
+          (type_qualifier))
+        (compound_statement
+          (return_statement
+            (identifier)))))))
+
+================================================================================
+Alignment
+================================================================================
+
+struct __align__(16) RankData {
+  const void* ptrs[8];
+};
+
+struct CUTE_ALIGNAS(16) Storage {
+  int x;
+};
+
+--------------------------------------------------------------------------------
+
+(translation_unit
+  (struct_specifier
+    (alignas_qualifier
+      (number_literal))
+    (type_identifier)
+    (field_declaration_list
+      (field_declaration
+        (type_qualifier)
+        (primitive_type)
+        (pointer_declarator
+          (array_declarator
+            (field_identifier)
+            (number_literal))))))
+  (struct_specifier
+    (alignas_qualifier
+      (number_literal))
+    (type_identifier)
+    (field_declaration_list
+      (field_declaration
+        (primitive_type)
+        (field_identifier)))))
+
+================================================================================
+Pragma before a loop body
+================================================================================
+
+__device__ void f(float* acc) {
+#pragma unroll
+  for (int i = 0; i < 4; ++i)
+#pragma unroll
+    for (int j = 0; j < 4; ++j) acc[i] += j;
+  CUTE_UNROLL
+  for (int k = 0; k < 2; ++k) {
+    acc[k] = 0;
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator
+      (identifier)
+      (parameter_list
+        (parameter_declaration
+          (primitive_type)
+          (pointer_declarator
+            (identifier)))))
+    (compound_statement
+      (preproc_call
+        (preproc_directive)
+        (preproc_arg))
+      (for_statement
+        (declaration
+          (primitive_type)
+          (init_declarator
+            (identifier)
+            (number_literal)))
+        (binary_expression
+          (identifier)
+          (number_literal))
+        (update_expression
+          (identifier))
+        (pragma_statement
+          (preproc_call
+            (preproc_directive)
+            (preproc_arg))
+          (for_statement
+            (declaration
+              (primitive_type)
+              (init_declarator
+                (identifier)
+                (number_literal)))
+            (binary_expression
+              (identifier)
+              (number_literal))
+            (update_expression
+              (identifier))
+            (expression_statement
+              (assignment_expression
+                (subscript_expression
+                  (identifier)
+                  (subscript_argument_list
+                    (identifier)))
+                (identifier))))))
+      (pragma_macro)
+      (for_statement
+        (declaration
+          (primitive_type)
+          (init_declarator
+            (identifier)
+            (number_literal)))
+        (binary_expression
+          (identifier)
+          (number_literal))
+        (update_expression
+          (identifier))
+        (compound_statement
+          (expression_statement
+            (assignment_expression
+              (subscript_expression
+                (identifier)
+                (subscript_argument_list
+                  (identifier)))
+              (number_literal))))))))
+
+================================================================================
+Kernel launch split over two lines
+================================================================================
+
+void run(cudaStream_t stream) {
+  sgl_hip::activation::act_and_mul_kernel<c_type, silu>
+      <<<grid, block, 0, stream>>>(out, input, d);
+  for (int i = 0; i < n; ++i) kernel<<<1, 32>>>(i);
+}
+
+--------------------------------------------------------------------------------
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator
+      (identifier)
+      (parameter_list
+        (parameter_declaration
+          (type_identifier)
+          (identifier))))
+    (compound_statement
+      (expression_statement
+        (call_expression
+          (qualified_identifier
+            (namespace_identifier)
+            (qualified_identifier
+              (namespace_identifier)
+              (template_function
+                (identifier)
+                (template_argument_list
+                  (type_descriptor
+                    (type_identifier))
+                  (type_descriptor
+                    (type_identifier))))))
+          (kernel_call_syntax
+            (identifier)
+            (identifier)
+            (number_literal)
+            (identifier))
+          (argument_list
+            (identifier)
+            (identifier)
+            (identifier))))
+      (for_statement
+        (declaration
+          (primitive_type)
+          (init_declarator
+            (identifier)
+            (number_literal)))
+        (binary_expression
+          (identifier)
+          (identifier))
+        (update_expression
+          (identifier))
+        (expression_statement
+          (call_expression
+            (identifier)
+            (kernel_call_syntax
+              (number_literal)
+              (number_literal))
+            (argument_list
+              (identifier))))))))
