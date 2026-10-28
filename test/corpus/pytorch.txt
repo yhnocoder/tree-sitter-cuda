@@ -1,0 +1,473 @@
+================================================================================
+Export macro before the class name (c10/core/TensorImpl.h, aten/src/ATen/core/ivalue.h)
+================================================================================
+
+struct C10_API TensorImpl : public c10::intrusive_ptr_target {
+ public:
+  TORCH_API friend bool operator==(const IValue& lhs, const IValue& rhs);
+};
+class TORCH_API Tensor final {};
+struct C10_API TensorImpl;
+
+--------------------------------------------------------------------------------
+
+(translation_unit
+  (struct_specifier
+    (macro_modifier)
+    (type_identifier)
+    (base_class_clause
+      (access_specifier)
+      (qualified_identifier
+        (namespace_identifier)
+        (type_identifier)))
+    (field_declaration_list
+      (access_specifier)
+      (friend_declaration
+        (macro_modifier)
+        (declaration
+          (primitive_type)
+          (function_declarator
+            (operator_name)
+            (parameter_list
+              (parameter_declaration
+                (type_qualifier)
+                (type_identifier)
+                (reference_declarator
+                  (identifier)))
+              (parameter_declaration
+                (type_qualifier)
+                (type_identifier)
+                (reference_declarator
+                  (identifier)))))))))
+  (class_specifier
+    (macro_modifier)
+    (type_identifier)
+    (virtual_specifier)
+    (field_declaration_list))
+  (struct_specifier
+    (macro_modifier)
+    (type_identifier)))
+
+================================================================================
+Modifier macros before functions (CompareEQKernel.cu, c10/util/generic_math.h)
+================================================================================
+
+C10_NOINLINE void compare_eq_ne_kernel(TensorIteratorBase &iter, EqOpType op) {}
+TORCH_API void f(int x);
+template <typename scalar_t>
+inline C10_HOST_DEVICE scalar_t div_floor_floating(scalar_t a, scalar_t b)
+    __ubsan_ignore_float_divide_by_zero__ {
+  return a;
+}
+struct IValue {
+  template <class Key, class Value>
+  C10_DEPRECATED_MESSAGE("IValues based on std::unordered_map<K, V> are slow and deprecated.")
+  IValue(std::unordered_map<Key, Value> v);
+};
+
+--------------------------------------------------------------------------------
+
+(translation_unit
+  (function_definition
+    (macro_modifier)
+    (primitive_type)
+    (function_declarator
+      (identifier)
+      (parameter_list
+        (parameter_declaration
+          (type_identifier)
+          (reference_declarator
+            (identifier)))
+        (parameter_declaration
+          (type_identifier)
+          (identifier))))
+    (compound_statement))
+  (declaration
+    (macro_modifier)
+    (primitive_type)
+    (function_declarator
+      (identifier)
+      (parameter_list
+        (parameter_declaration
+          (primitive_type)
+          (identifier)))))
+  (template_declaration
+    (template_parameter_list
+      (type_parameter_declaration
+        (type_identifier)))
+    (function_definition
+      (storage_class_specifier)
+      (macro_modifier)
+      (type_identifier)
+      (function_declarator
+        (identifier)
+        (parameter_list
+          (parameter_declaration
+            (type_identifier)
+            (identifier))
+          (parameter_declaration
+            (type_identifier)
+            (identifier)))
+        (attribute_specifier))
+      (compound_statement
+        (return_statement
+          (identifier)))))
+  (struct_specifier
+    (type_identifier)
+    (field_declaration_list
+      (template_declaration
+        (template_parameter_list
+          (type_parameter_declaration
+            (type_identifier))
+          (type_parameter_declaration
+            (type_identifier)))
+        (declaration
+          (attribute_specifier
+            (argument_list
+              (string_literal
+                (string_content))))
+          (function_declarator
+            (identifier)
+            (parameter_list
+              (parameter_declaration
+                (qualified_identifier
+                  (namespace_identifier)
+                  (template_type
+                    (type_identifier)
+                    (template_argument_list
+                      (type_descriptor
+                        (type_identifier))
+                      (type_descriptor
+                        (type_identifier)))))
+                (identifier)))))))))
+
+================================================================================
+Macro calls without a semicolon (AbsKernel.cu, vec_common_sve.h, SoftMax.cu)
+================================================================================
+
+namespace at::native {
+  REGISTER_DISPATCH(abs_stub, &abs_kernel_cuda)
+} // namespace at::native
+DEFINE_SVE_CAST(int64_t, s64, double, f64) // comment
+TORCH_IMPL_FUNC(softmax_cuda_out)
+(const Tensor& input) {}
+void f() {
+  C10_DIAGNOSTIC_PUSH_AND_IGNORED_IF_DEFINED("-Wswitch-enum")
+  auto y = foo(a)
+      .bar();
+}
+
+--------------------------------------------------------------------------------
+
+(translation_unit
+  (namespace_definition
+    (nested_namespace_specifier
+      (namespace_identifier)
+      (namespace_identifier))
+    (declaration_list
+      (expression_statement
+        (call_expression
+          (identifier)
+          (argument_list
+            (identifier)
+            (pointer_expression
+              (identifier)))))))
+  (comment)
+  (expression_statement
+    (call_expression
+      (identifier)
+      (argument_list
+        (type_descriptor
+          (primitive_type))
+        (identifier)
+        (type_descriptor
+          (primitive_type))
+        (identifier))))
+  (comment)
+  (function_definition
+    (function_declarator
+      (function_declarator
+        (identifier)
+        (parameter_list
+          (parameter_declaration
+            (type_identifier))))
+      (parameter_list
+        (parameter_declaration
+          (type_qualifier)
+          (type_identifier)
+          (reference_declarator
+            (identifier)))))
+    (compound_statement))
+  (function_definition
+    (primitive_type)
+    (function_declarator
+      (identifier)
+      (parameter_list))
+    (compound_statement
+      (expression_statement
+        (call_expression
+          (identifier)
+          (argument_list
+            (string_literal
+              (string_content)))))
+      (declaration
+        (placeholder_type_specifier
+          (auto))
+        (init_declarator
+          (identifier)
+          (call_expression
+            (field_expression
+              (call_expression
+                (identifier)
+                (argument_list
+                  (identifier)))
+              (field_identifier))
+            (argument_list)))))))
+
+================================================================================
+Macro lines in class bodies (vec_n.h, torch/nn/options/fold.h)
+================================================================================
+
+struct VectorizedN {
+  VECTORIZEDN_DEFINE_UNARY_OP(abs)
+  VECTORIZEDN_DEFINE_BINARY_OP(operator==)
+  TORCH_ARG(ExpandingArray<2>, dilation) = 1;
+  Foo(int x)
+      : a(x) {}
+};
+
+--------------------------------------------------------------------------------
+
+(translation_unit
+  (struct_specifier
+    (type_identifier)
+    (field_declaration_list
+      (expression_statement
+        (call_expression
+          (identifier)
+          (argument_list
+            (identifier))))
+      (expression_statement
+        (call_expression
+          (identifier)
+          (argument_list
+            (operator_name))))
+      (field_declaration
+        (function_declarator
+          (identifier)
+          (parameter_list
+            (parameter_declaration
+              (template_type
+                (type_identifier)
+                (template_argument_list
+                  (number_literal))))
+            (parameter_declaration
+              (type_identifier))))
+        (number_literal))
+      (function_definition
+        (function_declarator
+          (identifier)
+          (parameter_list
+            (parameter_declaration
+              (primitive_type)
+              (identifier))))
+        (field_initializer_list
+          (field_initializer
+            (field_identifier)
+            (argument_list
+              (identifier))))
+        (compound_statement)))))
+
+================================================================================
+Modifiers on extended lambdas (ActivationGeluKernel.cu, IndexKernel.cu)
+================================================================================
+
+void f() {
+  gpu_kernel(it, [] GPU_LAMBDA(scalar_t x) -> scalar_t { return x; });
+  const auto loop = [=]C10_DEVICE(int i) {};
+  g([=] __device__ (int i) { return i; });
+}
+
+--------------------------------------------------------------------------------
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator
+      (identifier)
+      (parameter_list))
+    (compound_statement
+      (expression_statement
+        (call_expression
+          (identifier)
+          (argument_list
+            (identifier)
+            (lambda_expression
+              (lambda_capture_specifier)
+              (macro_modifier)
+              (lambda_declarator
+                (parameter_list
+                  (parameter_declaration
+                    (type_identifier)
+                    (identifier)))
+                (trailing_return_type
+                  (type_descriptor
+                    (type_identifier))))
+              (compound_statement
+                (return_statement
+                  (identifier)))))))
+      (declaration
+        (type_qualifier)
+        (placeholder_type_specifier
+          (auto))
+        (init_declarator
+          (identifier)
+          (lambda_expression
+            (lambda_capture_specifier
+              (lambda_default_capture))
+            (macro_modifier)
+            (lambda_declarator
+              (parameter_list
+                (parameter_declaration
+                  (primitive_type)
+                  (identifier))))
+            (compound_statement))))
+      (expression_statement
+        (call_expression
+          (identifier)
+          (argument_list
+            (lambda_expression
+              (lambda_capture_specifier
+                (lambda_default_capture))
+              (lambda_declarator
+                (parameter_list
+                  (parameter_declaration
+                    (primitive_type)
+                    (identifier))))
+              (compound_statement
+                (return_statement
+                  (identifier))))))))))
+
+================================================================================
+C10_RESTRICT (aten/src/ATen/native/cuda/CUDALoops.cuh)
+================================================================================
+
+void invoke_impl(char* const C10_RESTRICT data[], const BFloat16* RESTRICT A);
+
+--------------------------------------------------------------------------------
+
+(translation_unit
+  (declaration
+    (primitive_type)
+    (function_declarator
+      (identifier)
+      (parameter_list
+        (parameter_declaration
+          (primitive_type)
+          (pointer_declarator
+            (type_qualifier)
+            (type_qualifier)
+            (array_declarator
+              (identifier))))
+        (parameter_declaration
+          (type_qualifier)
+          (type_identifier)
+          (pointer_declarator
+            (type_qualifier)
+            (identifier)))))))
+
+================================================================================
+C10_LAUNCH_BOUNDS (CUDALoops.cuh, DilatedMaxPool2d.cu, TensorFactories.cu)
+================================================================================
+
+template <int nt, int vt, typename func_t>
+C10_LAUNCH_BOUNDS_2(nt, 4)
+__global__ void elementwise_kernel(int N, func_t f) {}
+
+template <typename scalar_t>
+#if defined (USE_ROCM)
+C10_LAUNCH_BOUNDS_2(BLOCK_THREADS, 4)
+#else
+C10_LAUNCH_BOUNDS_2(BLOCK_THREADS, 8)
+#endif
+__global__ void max_pool_backward_nchw(const scalar_t* top_diff) {}
+
+template <typename scalar_t>
+__global__
+#if defined(USE_ROCM)
+C10_LAUNCH_BOUNDS_1(512)
+#endif
+void tril_indices_kernel(scalar_t * tensor) {}
+
+--------------------------------------------------------------------------------
+
+(translation_unit
+  (template_declaration
+    (template_parameter_list
+      (parameter_declaration
+        (primitive_type)
+        (identifier))
+      (parameter_declaration
+        (primitive_type)
+        (identifier))
+      (type_parameter_declaration
+        (type_identifier)))
+    (function_definition
+      (launch_bounds
+        (identifier)
+        (number_literal))
+      (primitive_type)
+      (function_declarator
+        (identifier)
+        (parameter_list
+          (parameter_declaration
+            (primitive_type)
+            (identifier))
+          (parameter_declaration
+            (type_identifier)
+            (identifier))))
+      (compound_statement)))
+  (template_declaration
+    (template_parameter_list
+      (type_parameter_declaration
+        (type_identifier)))
+    (function_definition
+      (preproc_if
+        (preproc_defined
+          (identifier))
+        (launch_bounds
+          (identifier)
+          (number_literal))
+        (preproc_else
+          (launch_bounds
+            (identifier)
+            (number_literal))))
+      (primitive_type)
+      (function_declarator
+        (identifier)
+        (parameter_list
+          (parameter_declaration
+            (type_qualifier)
+            (type_identifier)
+            (pointer_declarator
+              (identifier)))))
+      (compound_statement)))
+  (template_declaration
+    (template_parameter_list
+      (type_parameter_declaration
+        (type_identifier)))
+    (function_definition
+      (preproc_if
+        (preproc_defined
+          (identifier))
+        (launch_bounds
+          (number_literal)))
+      (primitive_type)
+      (function_declarator
+        (identifier)
+        (parameter_list
+          (parameter_declaration
+            (type_identifier)
+            (pointer_declarator
+              (identifier)))))
+      (compound_statement))))

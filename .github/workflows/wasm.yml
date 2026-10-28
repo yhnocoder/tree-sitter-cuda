@@ -3,14 +3,14 @@ name: Wasm
 # Builds tree-sitter-cuda.wasm for CodeBoard, which loads it with the runtime in
 # @vscode/tree-sitter-wasm. The CLI and emsdk versions must match that runtime
 # (0.3.1 ships web-tree-sitter 0.25.1, ABI 15, emsdk 4.0.1); bump all three together.
-# Every run packs npm/ (only the wasm and the queries) into a tarball. A `v<npm/package.json version>`
-# tag attaches the wasm and that tarball to the tag's GitHub Release, and CodeBoard installs the
-# tarball by its URL. Nothing is published to the npm registry.
+# Every run packs npm/ (only the wasm and the queries) into a tarball. A push to master whose
+# npm/package.json version has no `v<version>` tag yet creates that tag and its GitHub Release with
+# the wasm and the tarball; CodeBoard installs the tarball by its URL. Nothing is published to the
+# npm registry. So a release is just a version bump merged into master.
 
 on:
   push:
     branches: ["**"]
-    tags: ["v*"]
     paths:
       - grammar.js
       - src/**
@@ -30,7 +30,8 @@ env:
 
 concurrency:
   group: ${{github.workflow}}-${{github.ref}}
-  cancel-in-progress: true
+  # never cancel a master run halfway through creating a release
+  cancel-in-progress: ${{github.ref != 'refs/heads/master'}}
 
 jobs:
   build:
@@ -76,16 +77,15 @@ jobs:
           path: |
             tree-sitter-cuda.wasm*
             yhnocoder-tree-sitter-cuda-*.tgz
-      - name: Check the tag against the package version
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: |
-          V=$(node -p 'require("./npm/package.json").version')
-          [ "$GITHUB_REF_NAME" = "v$V" ] || { echo "::error::tag $GITHUB_REF_NAME does not match npm/package.json version $V"; exit 1; }
-      - name: Attach to the release
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Release a new version
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         env:
           GH_TOKEN: ${{github.token}}
         run: |
-          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \
-            || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes "tree-sitter-cuda.wasm built with tree-sitter CLI $TREE_SITTER_CLI (ABI 15) and emsdk $EMSDK, for @vscode/tree-sitter-wasm $VSCODE_TREE_SITTER_WASM."
-          gh release upload "$GITHUB_REF_NAME" tree-sitter-cuda.wasm tree-sitter-cuda.wasm.sha256 yhnocoder-tree-sitter-cuda-*.tgz --clobber
+          TAG="v$(node -p 'require("./npm/package.json").version')"
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null; then
+            echo "$TAG already exists; nothing to release"; exit 0
+          fi
+          gh release create "$TAG" --target "$GITHUB_SHA" --title "$TAG" \
+            --notes "tree-sitter-cuda.wasm built with tree-sitter CLI $TREE_SITTER_CLI (ABI 15) and emsdk $EMSDK, for @vscode/tree-sitter-wasm $VSCODE_TREE_SITTER_WASM." \
+            tree-sitter-cuda.wasm tree-sitter-cuda.wasm.sha256 yhnocoder-tree-sitter-cuda-*.tgz
