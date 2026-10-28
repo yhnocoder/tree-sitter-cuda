@@ -74,7 +74,6 @@ jobs:
             examples/cuda-samples/Samples/5_Domain_Specific/convolutionFFT2D/convolutionFFT2D.cuh
             examples/cuda-samples/Samples/5_Domain_Specific/postProcessGL/postProcessGL.cu
             examples/cuda-samples/Samples/5_Domain_Specific/vulkanImageCUDA/vulkanImageCUDA.cu
-            examples/cuda-samples/Samples/8_Platform_Specific/Tegra/EGLSync_CUDAEvent_Interop/EGLSync_CUDAEvent_Interop.cu
       - name: Upload failures artifact
         uses: actions/upload-artifact@v7
         if: "!cancelled() && steps.parse-files.outcome == 'failure'"

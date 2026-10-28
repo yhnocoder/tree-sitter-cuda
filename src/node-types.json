@@ -773,7 +773,15 @@
           "named": true
         },
         {
+          "type": "operator_name",
+          "named": true
+        },
+        {
           "type": "preproc_defined",
+          "named": true
+        },
+        {
+          "type": "type_descriptor",
           "named": true
         }
       ]
@@ -990,7 +998,7 @@
     "fields": {},
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "argument_list",
@@ -1532,6 +1540,10 @@
         },
         {
           "type": "base_class_clause",
+          "named": true
+        },
+        {
+          "type": "macro_modifier",
           "named": true
         },
         {
@@ -2965,7 +2977,7 @@
       },
       "type": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "type_specifier",
@@ -3051,6 +3063,10 @@
         },
         {
           "type": "declaration",
+          "named": true
+        },
+        {
+          "type": "expression_statement",
           "named": true
         },
         {
@@ -3602,7 +3618,7 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
@@ -3611,6 +3627,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "macro_modifier",
           "named": true
         },
         {
@@ -4524,12 +4544,32 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "macro_modifier",
+          "named": true
+        }
+      ]
     }
   },
   {
     "type": "lambda_specifier",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "attribute_specifier",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "launch_bounds",
@@ -7166,6 +7206,10 @@
           "named": true
         },
         {
+          "type": "macro_modifier",
+          "named": true
+        },
+        {
           "type": "ms_declspec_modifier",
           "named": true
         },
@@ -8115,6 +8159,10 @@
           "named": true
         },
         {
+          "type": "macro_modifier",
+          "named": true
+        },
+        {
           "type": "ms_declspec_modifier",
           "named": true
         },
@@ -8595,11 +8643,43 @@
     "named": false
   },
   {
+    "type": "AOTI_API",
+    "named": false
+  },
+  {
+    "type": "AOTI_TORCH_EXPORT",
+    "named": false
+  },
+  {
     "type": "C10_ALWAYS_INLINE",
     "named": false
   },
   {
+    "type": "C10_ALWAYS_INLINE_UNLESS_MOBILE",
+    "named": false
+  },
+  {
+    "type": "C10_API",
+    "named": false
+  },
+  {
+    "type": "C10_CUDA_API",
+    "named": false
+  },
+  {
+    "type": "C10_DEPRECATED_MESSAGE",
+    "named": false
+  },
+  {
     "type": "C10_DEVICE",
+    "named": false
+  },
+  {
+    "type": "C10_EXPORT",
+    "named": false
+  },
+  {
+    "type": "C10_HIDDEN",
     "named": false
   },
   {
@@ -8611,7 +8691,31 @@
     "named": false
   },
   {
+    "type": "C10_IMPORT",
+    "named": false
+  },
+  {
+    "type": "C10_LAUNCH_BOUNDS_1",
+    "named": false
+  },
+  {
+    "type": "C10_LAUNCH_BOUNDS_2",
+    "named": false
+  },
+  {
+    "type": "C10_NOINLINE",
+    "named": false
+  },
+  {
+    "type": "C10_RESTRICT",
+    "named": false
+  },
+  {
     "type": "C10_UNROLL",
+    "named": false
+  },
+  {
+    "type": "C10_XPU_API",
     "named": false
   },
   {
@@ -8683,11 +8787,19 @@
     "named": false
   },
   {
+    "type": "GPU_LAMBDA",
+    "named": false
+  },
+  {
     "type": "HOST_DEVICE",
     "named": false
   },
   {
     "type": "HOST_DEVICE_INLINE",
+    "named": false
+  },
+  {
+    "type": "JITERATOR_HOST_DEVICE",
     "named": false
   },
   {
@@ -8703,11 +8815,31 @@
     "named": false
   },
   {
+    "type": "MAYBE_GLOBAL",
+    "named": false
+  },
+  {
+    "type": "METAL_FUNC",
+    "named": false
+  },
+  {
     "type": "NULL",
     "named": false
   },
   {
+    "type": "PYBIND11_EXPORT",
+    "named": false
+  },
+  {
+    "type": "PYTORCH_QNNP_INTERNAL",
+    "named": false
+  },
+  {
     "type": "R\"",
+    "named": false
+  },
+  {
+    "type": "RESTRICT",
     "named": false
   },
   {
@@ -8723,6 +8855,26 @@
     "named": false
   },
   {
+    "type": "TORCH_API",
+    "named": false
+  },
+  {
+    "type": "TORCH_CUDA_CPP_API",
+    "named": false
+  },
+  {
+    "type": "TORCH_CUDA_CU_API",
+    "named": false
+  },
+  {
+    "type": "TORCH_PYTHON_API",
+    "named": false
+  },
+  {
+    "type": "TORCH_XPU_API",
+    "named": false
+  },
+  {
     "type": "U\"",
     "named": false
   },
@@ -8732,6 +8884,10 @@
   },
   {
     "type": "UR\"",
+    "named": false
+  },
+  {
+    "type": "VISIBILITY_HIDDEN",
     "named": false
   },
   {

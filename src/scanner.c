@@ -5,7 +5,7 @@
 #include <string.h>
 #include <wctype.h>
 
-enum TokenType { RAW_STRING_DELIMITER, RAW_STRING_CONTENT };
+enum TokenType { RAW_STRING_DELIMITER, RAW_STRING_CONTENT, MACRO_LINE_END, MACRO_LINE_START };
 
 /// The spec limits delimiters to 16 chars
 #define MAX_DELIMITER_LENGTH 16
@@ -100,12 +100,142 @@ void *tree_sitter_cuda_external_scanner_create() {
     return scanner;
 }
 
+static bool skip_comment(TSLexer *lexer) {
+    advance(lexer);
+    if (lexer->lookahead == '/') {
+        while (lexer->lookahead != '\n' && !lexer->eof(lexer)) {
+            advance(lexer);
+        }
+        return true;
+    }
+    if (lexer->lookahead != '*') {
+        return false;
+    }
+    advance(lexer);
+    while (!lexer->eof(lexer)) {
+        if (lexer->lookahead == '*') {
+            advance(lexer);
+            if (lexer->lookahead == '/') {
+                advance(lexer);
+                return true;
+            }
+        } else {
+            advance(lexer);
+        }
+    }
+    return false;
+}
+
+/// After the `)` of a macro call: true when only a line break, blanks and comments follow before
+/// something new starts, so that a call continued on the next line (`.bar()`, `+ x`, `{`, `: a(x)`,
+/// `= default`) is never taken for a macro.
+static bool ends_line_before_new_item(TSLexer *lexer) {
+    bool newline = false;
+    for (;;) {
+        if (lexer->lookahead == '\n') {
+            newline = true;
+            advance(lexer);
+        } else if (iswspace(lexer->lookahead)) {
+            advance(lexer);
+        } else if (lexer->lookahead == '/') {
+            if (!skip_comment(lexer)) {
+                return false;
+            }
+        } else {
+            break;
+        }
+    }
+    if (lexer->eof(lexer)) {
+        return true;
+    }
+    int32_t c = lexer->lookahead;
+    return newline && (iswalpha(c) || c == '_' || c == '#' || c == '}' || c == '[' || c == '~');
+}
+
+/// Zero-width end of a macro call that stands on its own line without a `;`, such as
+/// `REGISTER_DISPATCH(abs_stub, &abs_kernel_cuda)`.
+static bool scan_macro_line_end(TSLexer *lexer) {
+    lexer->mark_end(lexer);
+    return ends_line_before_new_item(lexer);
+}
+
+static bool skip_quoted(TSLexer *lexer) {
+    int32_t quote = lexer->lookahead;
+    advance(lexer);
+    while (lexer->lookahead != quote) {
+        if (lexer->eof(lexer) || lexer->lookahead == '\n') {
+            return false;
+        }
+        if (lexer->lookahead == '\\') {
+            advance(lexer);
+        }
+        advance(lexer);
+    }
+    advance(lexer);
+    return true;
+}
+
+/// Zero-width start of the same in a class body, such as `VECTORIZEDN_DEFINE_UNARY_OP(abs)`. It
+/// looks ahead over the whole call because there, unlike at namespace scope, a call expression
+/// may not start, and letting one start everywhere costs real declarations their parse.
+static bool scan_macro_line_start(TSLexer *lexer) {
+    while (iswspace(lexer->lookahead)) {
+        lexer->advance(lexer, true);
+    }
+    lexer->mark_end(lexer);
+    if (!iswalpha(lexer->lookahead) && lexer->lookahead != '_') {
+        return false;
+    }
+    while (iswalnum(lexer->lookahead) || lexer->lookahead == '_') {
+        advance(lexer);
+    }
+    while (lexer->lookahead == ' ' || lexer->lookahead == '\t') {
+        advance(lexer);
+    }
+    if (lexer->lookahead != '(') {
+        return false;
+    }
+    unsigned depth = 0;
+    do {
+        if (lexer->eof(lexer)) {
+            return false;
+        }
+        int32_t c = lexer->lookahead;
+        if (c == '"' || c == '\'') {
+            if (!skip_quoted(lexer)) {
+                return false;
+            }
+            continue;
+        }
+        if (c == '(') {
+            depth++;
+        } else if (c == ')') {
+            depth--;
+        } else if (c == ';' || c == '{' || c == '}') {
+            return false;
+        }
+        advance(lexer);
+    } while (depth > 0);
+    return ends_line_before_new_item(lexer);
+}
+
 bool tree_sitter_cuda_external_scanner_scan(void *payload, TSLexer *lexer, const bool *valid_symbols) {
     Scanner *scanner = (Scanner *)payload;
 
     if (valid_symbols[RAW_STRING_DELIMITER] && valid_symbols[RAW_STRING_CONTENT]) {
         // we're in error recovery
         return false;
+    }
+
+    // Both look ahead past the token, so a failed scan must not fall through to another one.
+    if (valid_symbols[MACRO_LINE_START]) {
+        lexer->result_symbol = MACRO_LINE_START;
+        return scan_macro_line_start(lexer);
+    }
+
+    if (valid_symbols[MACRO_LINE_END]) {
+        lexer->result_symbol = MACRO_LINE_END;
+        return scan_macro_line_end(lexer);
     }
 
     // No skipping leading whitespace: raw-string grammar is space-sensitive.
